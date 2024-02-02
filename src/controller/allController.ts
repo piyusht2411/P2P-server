@@ -201,3 +201,27 @@ res.status(200).json({ok:true,message:"money sent successfully"}) ;
     res.status(407).json({ message: error });
   }
 };
+
+export const addMoney:RequestHandler =async(req, res) => {
+ try{
+  const senderId = req.params.id;
+  const amount = req.body.amount;
+
+  const user = await User.findById(senderId);
+  if(!user){
+    return res.status(400).json({ok:false,message:"user not found"}) ;
+  }
+  user.wallet = Number(user.wallet) + Number(amount);
+ const result =  await User.findByIdAndUpdate(
+    user._id,
+    { wallet: user.wallet },
+    { new: true }
+  );
+  await user.save();
+  res.status(200).json({ok:true,message:"money added successfully"});
+  sendMail(user.email,"Money trasnfered", `${user.name} Rs. ${amount} in added in your wallet`);
+ }catch(error){
+  res.status(407).json({ message: error });
+}
+
+}
