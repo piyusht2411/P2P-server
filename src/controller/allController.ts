@@ -99,14 +99,14 @@ export const signIn:RequestHandler = async(req, res, next) => {
   
 };
 // for checking balance of a user
-export const getBalance:RequestHandler = async(req, res, next) => {
+export const userInfo:RequestHandler = async(req, res, next) => {
   try{
     const id = req.params.id;
     const user = await User.findById(id);
     if(!user){
       return res.status(400).json({ok:false,message:"Invalid Credentials"}) ;
     } 
-    return res.status(200).json({ok:true,balance:user.wallet}) ;  
+    return res.status(200).json({ok:true, user}) ;  
 
 
   }catch(err){
@@ -137,10 +137,7 @@ export const sendMoney:RequestHandler = async(req, res, next) => {
   // const receiverId = req.body.receiverId;
   const receiverMail = req.body.receiverMail;
   const amount = req.body.amount;
- // if the sender id and receiver id are same
-  // if (senderId === receiverId){
-  //   return res.status(400).json({ message: "Cannot transfer to the same account" });
-  // }
+
   // find sender and reciever in database
   const sender = await User.findOne({_id: senderId});
   const receiver =  await User.findOne({email: receiverMail});
@@ -151,6 +148,11 @@ export const sendMoney:RequestHandler = async(req, res, next) => {
   //if reciecver is not in database
   if(!receiver){
     return res.status(400).json({ok:false,message:"receiver not found"}) ;
+  }
+   // if the sender id and receiver id are same
+  if(sender.email === receiver.email){
+    return res.status(400).json({ message: "Cannot transfer to the same account" });
+
   }
   
   let senderBalance = sender.wallet;
@@ -191,7 +193,7 @@ sender.transition.push(sendertransactiondata);
 
   let email = receiver.email;
   // for sending mail to reciever that they have recieved the money
-sendMail(email,"Money trasnfered", "Money transfered in your wallet successfully");
+sendMail(email,"Money trasnfered", `${receiver.name} trasnfered Rs. ${amount} in your wallet`);
 
 res.status(200).json({ok:true,message:"money sent successfully"}) ;
 

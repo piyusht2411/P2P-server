@@ -1,15 +1,15 @@
 import express, {Router, Express, Request, Response , Application} from 'express';
-import {register,signIn, getBalance,signout, sendMoney} from "../controller/allController";
+import {register,signIn, userInfo,signout, sendMoney} from "../controller/allController";
 import { authenticateToken } from '../middleware/authenticateToken';
 import {hour, day, week, month, year,} from '../controller/filter';
 //routers
 const router = Router();
 router.post('/register', register);
-router.get('/signout', signout);
+router.get('/logout', signout);
 
 router.post('/login', signIn);
-router.put('/sendmoney/:_id', sendMoney);
-router.get('/getbalance/:id',authenticateToken, getBalance);
+router.put('/sendmoney/:id', sendMoney);
+router.get('/userinfo/:id', userInfo);
 router.get('/hour/:id',authenticateToken, hour);
 router.get('/day/:id',authenticateToken, day);
 router.get('/week/:id',authenticateToken, week);
