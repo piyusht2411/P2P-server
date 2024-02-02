@@ -193,7 +193,7 @@ sender.transition.push(sendertransactiondata);
 
   let email = receiver.email;
   // for sending mail to reciever that they have recieved the money
-sendMail(email,"Money trasnfered", `${receiver.name} trasnfered Rs. ${amount} in your wallet`);
+sendMail(email,"Money transferred", `${receiver.name} trasnfered Rs. ${amount} in your wallet`);
 
 res.status(200).json({ok:true,message:"money sent successfully"}) ;
 
@@ -219,7 +219,7 @@ export const addMoney:RequestHandler =async(req, res) => {
   );
   await user.save();
   res.status(200).json({ok:true,message:"money added successfully"});
-  sendMail(user.email,"Money trasnfered", `${user.name} Rs. ${amount} in added in your wallet`);
+  sendMail(user.email,"Money added", `${user.name} Rs. ${amount} in added in your wallet`);
  }catch(error){
   res.status(407).json({ message: error });
 }
