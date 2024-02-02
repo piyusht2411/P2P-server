@@ -9,7 +9,7 @@ router.get('/logout', signout);
 router.put('/addmoney/:id', addMoney);
 
 router.post('/login', signIn);
-router.put('/sendmoney/:id', sendMoney);
+router.put('/sendmoney/:id',authenticateToken, sendMoney);
 router.get('/userinfo/:id', userInfo);
 router.get('/hour/:id',authenticateToken, hour);
 router.get('/day/:id',authenticateToken, day);

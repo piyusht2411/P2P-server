@@ -87,10 +87,11 @@ export const signIn:RequestHandler = async(req, res, next) => {
       const refreshToken = jwt.sign({userId : user.id},process.env.JWT_REFRESH_SECRET_KEY||" ",{expiresIn : '2h'}) ;
 
       // Saving tokens in cookies 
-      res.cookie('authToken',authToken,({httpOnly : true})) ;
-      res.cookie('refreshToken',refreshToken,({httpOnly:true})) ;
+      // res.cookie('authToken',authToken,({httpOnly : true})) ;
+      // res.cookie('refreshToken',refreshToken,({httpOnly:true})) ;
+      res.header('Authorization', `Bearer ${authToken}`);
 
-      return res.status(200).json({ok:true,message : "Login Successful",userid:user.id, user, authToken:authToken, refreshToken:refreshToken}) ;
+      return res.status(200).json({ok:true,message : "Login Successful",userid:user.id, user, authToken:authToken}) ;
 
   }
   catch(err){
