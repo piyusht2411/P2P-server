@@ -102,7 +102,7 @@ export const signIn:RequestHandler = async(req, res, next) => {
         await tokenUser.save();
       }
       
- 
+      res.cookie('authToken',authToken,({httpOnly:true}));
       res.cookie('refreshToken',refreshToken,({httpOnly:true}));
 
 

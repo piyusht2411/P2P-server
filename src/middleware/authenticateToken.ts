@@ -24,11 +24,6 @@ export const authenticateToken = async(req: Request, res: Response, next: NextFu
         
     }
     const refreshToken = tokenuser.refreshToken;
-    
-    console.log("authToken", authToken);
-     console.log("backend referesh", refreshToken);
-
-
     //if auth token and refersh token both doesn't exist
     if(!authToken || !refreshToken){
         return res.status(401).json({message : " Authentication Failed : No authToken or refreshToken is provided "})
