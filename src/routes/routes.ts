@@ -6,7 +6,7 @@ import {hour, day, week, month, year,} from '../controller/filter';
 const router = Router();
 router.post('/register', register);
 router.get('/logout', signout);
-router.put('/addmoney/:id', addMoney);
+router.put('/addmoney/:id',authenticateToken, addMoney);
 
 router.post('/login', signIn);
 router.put('/sendmoney/:id',authenticateToken, sendMoney);
