@@ -89,9 +89,9 @@ export const signIn:RequestHandler = async(req, res, next) => {
       // Saving tokens in cookies 
       // res.cookie('authToken',authToken,({httpOnly : true})) ;
       // res.cookie('refreshToken',refreshToken,({httpOnly:true})) ;
-      res.header('Authorization', `Bearer ${authToken}`);
+      res.header('Authorization', `Bearer ${authToken} + ${refreshToken}`);
 
-      return res.status(200).json({ok:true,message : "Login Successful",userid:user.id, user, authToken:authToken}) ;
+      return res.status(200).json({ok:true,message : "Login Successful",userid:user.id, user, authToken:authToken, refreshToken:refreshToken}) ;
 
   }
   catch(err){
