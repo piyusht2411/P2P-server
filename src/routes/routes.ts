@@ -10,7 +10,7 @@ router.put('/addmoney/:id',authenticateToken, addMoney);
 
 router.post('/login', signIn);
 router.put('/sendmoney/:id',authenticateToken, sendMoney);
-router.get('/userinfo/:id', userInfo);
+router.get('/userinfo/:id',authenticateToken, userInfo);
 router.get('/hour/:id',authenticateToken, hour);
 router.get('/day/:id',authenticateToken, day);
 router.get('/week/:id',authenticateToken, week);
