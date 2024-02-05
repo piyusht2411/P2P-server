@@ -184,13 +184,13 @@ export const sendMoney:RequestHandler = async(req, res, next) => {
   const sendertransactiondata = {
     id: generateUniqueId(),
     amount: amount,
-    timestamp: new Date()
+    timestamp: new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})
 };
 // receiver's transaction data
 const receivertransactiondata = {
     id: generateUniqueId(),
     amount: amount,
-    timestamp: new Date()
+    timestamp: new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})
 };
 // push sender's transaction data and reciever's data to their recpective transition array
 sender.transition.push(sendertransactiondata);
