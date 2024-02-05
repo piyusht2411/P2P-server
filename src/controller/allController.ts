@@ -89,11 +89,20 @@ export const signIn:RequestHandler = async(req, res, next) => {
 
       // Saving tokens in cookies 
       // res.cookie('authToken',authToken,({httpOnly : true})) ;
-      const token = new refresh({
-        refreshToken:refreshToken,
-        tokenId: user.id
-      });
-      await token.save();
+      const tokenUser = await refresh.findOne({tokenId : user.id})
+      if(!tokenUser){
+        const token = new refresh({
+          refreshToken:refreshToken,
+          tokenId: user.id
+        });
+        await token.save();
+      }
+      else{
+        tokenUser.refreshToken = refreshToken;
+        await tokenUser.save();
+      }
+      
+ 
       res.cookie('refreshToken',refreshToken,({httpOnly:true}));
 
 
