@@ -10,8 +10,6 @@ export const authenticateToken = async(req: Request, res: Response, next: NextFu
     // const authToken = auth && auth.split(' ')[1];
     // const refreshToken =auth && auth.split('+')[1];
     const myuserId = req.params.id;
-
-   
     // const decoded = jwt.verify(authToken.replace('Bearer ', ''), process.env.JWT_SECRET_KEY || " ");
     // const userdata :any = decoded;
 
@@ -23,9 +21,6 @@ export const authenticateToken = async(req: Request, res: Response, next: NextFu
     }
     const refreshToken = tokenuser.refreshToken;
     const authToken =  req.header('authorization');
-    if (!authToken) {
-        return res.status(401).send('Access token not found');
-    }
     //if auth token and refersh token both doesn't exist
     if(!authToken || !refreshToken){
         return res.status(401).json({message : " Authentication Failed : No authToken or refreshToken is provided "})
