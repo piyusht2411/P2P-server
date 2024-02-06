@@ -17,7 +17,14 @@ declare global {
 const app: Application = express();
 const PORT = process.env.PORT || 8080;
 //middleware
-app.use(cors());
+
+var corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+// app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('/', routes);
