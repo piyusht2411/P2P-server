@@ -183,13 +183,17 @@ export const sendMoney:RequestHandler = async(req, res, next) => {
   // sender's transaction data 
   const sendertransactiondata = {
     id: generateUniqueId(),
+    status:"Sent money",
     amount: amount,
+    wallet: sender.wallet,
     timestamp: new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})
 };
 // receiver's transaction data
 const receivertransactiondata = {
     id: generateUniqueId(),
+    status:"Received money",
     amount: amount,
+    wallet: receiver.wallet,
     timestamp: new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})
 };
 // push sender's transaction data and reciever's data to their recpective transition array
@@ -230,6 +234,15 @@ export const addMoney:RequestHandler =async(req, res) => {
     return res.status(400).json({ok:false,message:"user not found"}) ;
   }
   user.wallet = Number(user.wallet) + Number(amount);
+  const transactiondata = {
+    id: generateUniqueId(),
+    status:"Added money",
+    amount: amount,
+    wallet: user.wallet,
+    timestamp: new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})
+};
+user.transition.push(transactiondata);
+
  const result =  await User.findByIdAndUpdate(
     user._id,
     { wallet: user.wallet },
