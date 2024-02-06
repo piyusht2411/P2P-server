@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from 'uuid';
 import User from '../model/schema';
 import {sendMail} from '../util/emailer'
-import refresh from '../model/refresh';
 
 interface recipentdata{
   receiverId:string;
@@ -89,18 +88,6 @@ export const signIn:RequestHandler = async(req, res, next) => {
 
       // Saving tokens in cookies 
       // res.cookie('authToken',authToken,({httpOnly : true})) ;
-      const tokenUser = await refresh.findOne({tokenId : user.id})
-      if(!tokenUser){
-        const token = new refresh({
-          refreshToken:refreshToken,
-          tokenId: user.id
-        });
-        await token.save();
-      }
-      else{
-        tokenUser.refreshToken = refreshToken;
-        await tokenUser.save();
-      }
       
       res.cookie('authToken',authToken,({httpOnly:true}));
       res.cookie('refreshToken',refreshToken,({httpOnly:true}));
