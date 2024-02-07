@@ -200,9 +200,12 @@ sender.transition.push(sendertransactiondata);
   await sender.save();
   await receiver.save();
 
-  let email = receiver.email;
+  let Senderemail = sender.email;
+  let Receiveremail = receiver.email;
+
   // for sending mail to reciever that they have recieved the money
-sendMail(email,"Money transferred", `${receiver.name} trasnfered Rs. ${amount} in your wallet`);
+sendMail(Senderemail,"Money transferred", `You transfered Rs. ${amount} in ${receiver.name}'s wallet`);
+sendMail(Receiveremail,"Money Received", `${sender.name} trasnfered Rs. ${amount} in your wallet`);
 
 res.status(200).json({ok:true,message:"money sent successfully", transitionId:sendertransactiondata.id}) ;
 
