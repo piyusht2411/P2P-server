@@ -17,6 +17,10 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  pin:{
+    type: String,
+    required: true
+  },
  
   wallet:{
     type: Number,

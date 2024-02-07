@@ -21,7 +21,7 @@ const generateUniqueId = ()=>{
 //for sign up
 export const register: RequestHandler = async (req, res, next) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password, pin } = req.body;
     //for validation
     const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
         const pass:RegExp=  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{8,15}$/;
@@ -40,17 +40,18 @@ export const register: RequestHandler = async (req, res, next) => {
     const existinguser = await User.findOne({ email });
 //if user is already exist
     if (existinguser) {
-      return res.status(407).json({ message: 'User already Exist' });
+      return res.status(400).json({ok:false, message: 'User already Exist' });
     }
     //hashing password
     const salt = genSaltSync(10);
     const hashPassword = hashSync(password, salt);
+    const hashPin = hashSync(pin, salt);
     const newUser = new User({
       name,
       email,
       phone,
       password: hashPassword,
-    
+      pin:hashPin
 
     });
     //save new user
@@ -73,7 +74,7 @@ export const signIn:RequestHandler = async(req, res, next) => {
 
       // Checking if the email exists in database 
       if(!user){
-          return res.status(400).json({ok:false,message:"Invalid Credentials"}) ;
+          return res.status(400).json({ok:false,message:"User not found"}) ;
       }
 
       // comapring password entered with database hashed Password
@@ -142,6 +143,7 @@ export const sendMoney:RequestHandler = async(req, res, next) => {
   // const receiverId = req.body.receiverId;
   const receiverMail = req.body.receiverMail;
   const amount = req.body.amount;
+  const pin = req.body.pin;
 
   // find sender and reciever in database
   const sender = await User.findOne({_id: senderId});
@@ -159,6 +161,10 @@ export const sendMoney:RequestHandler = async(req, res, next) => {
     return res.status(400).json({ message: "Cannot transfer to the same account" });
 
   }
+  const isPinMatch = await compareSync(pin,sender.pin) ;
+      if(!isPinMatch){
+          return res.status(400).json({ok:false,message:"Wrong Pin Number"}); 
+      }
   
   let senderBalance = sender.wallet;
 //if sender's balance is less than the sending amount
@@ -218,11 +224,17 @@ export const addMoney:RequestHandler =async(req, res) => {
  try{
   const senderId = req.params.id;
   const amount = req.body.amount;
+  const pin = req.body.pin;
 
   const user = await User.findById(senderId);
   if(!user){
     return res.status(400).json({ok:false,message:"user not found"}) ;
   }
+  const isPinMatch = await compareSync(pin,user.pin) ;
+      if(!isPinMatch){
+          return res.status(400).json({ok:false,message:"Wrong Pin Number"}); 
+      }
+
   user.wallet = Number(user.wallet) + Number(amount);
   const transactiondata = {
     id: generateUniqueId(),
