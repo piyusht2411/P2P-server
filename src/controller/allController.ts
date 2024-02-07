@@ -204,7 +204,7 @@ sender.transition.push(sendertransactiondata);
   // for sending mail to reciever that they have recieved the money
 sendMail(email,"Money transferred", `${receiver.name} trasnfered Rs. ${amount} in your wallet`);
 
-res.status(200).json({ok:true,message:"money sent successfully"}) ;
+res.status(200).json({ok:true,message:"money sent successfully", transitionId:sendertransactiondata.id}) ;
 
   }catch(error){
     res.status(407).json({ message: error });
@@ -236,7 +236,7 @@ user.transition.push(transactiondata);
     { new: true }
   );
   await user.save();
-  res.status(200).json({ok:true,message:"money added successfully"});
+  res.status(200).json({ok:true,message:"money added successfully", transitionId:transactiondata.id});
   sendMail(user.email,"Money added", `${user.name} Rs. ${amount} in added in your wallet`);
  }catch(error){
   res.status(407).json({ message: error });
