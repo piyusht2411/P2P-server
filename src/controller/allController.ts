@@ -203,7 +203,7 @@ sender.transition.push(sendertransactiondata);
   let Senderemail = sender.email;
   let Receiveremail = receiver.email;
 
-  // for sending mail to reciever that they have recieved the money
+  // for sending mail to sender and reciever that they have recieved the money
 sendMail(Senderemail,"Money transferred", `You transfered Rs. ${amount} in ${receiver.name}'s wallet`);
 sendMail(Receiveremail,"Money Received", `${sender.name} trasnfered Rs. ${amount} in your wallet`);
 
