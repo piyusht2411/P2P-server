@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 8080;
 //middleware
 
 var corsOptions = {
-  origin: "*",
+  origin: "https://p2p-client-blue.vercel.app",
   credentials: true
 };
 
