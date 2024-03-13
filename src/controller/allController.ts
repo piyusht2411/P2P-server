@@ -21,7 +21,7 @@ const generateUniqueId = ()=>{
 //for sign up
 export const register: RequestHandler = async (req, res, next) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password, pin } = req.body;
     //for validation
     const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
         const pass:RegExp=  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{8,15}$/;
@@ -40,17 +40,18 @@ export const register: RequestHandler = async (req, res, next) => {
     const existinguser = await User.findOne({ email });
 //if user is already exist
     if (existinguser) {
-      return res.status(407).json({ message: 'User already Exist' });
+      return res.status(400).json({ok:false, message: 'User already Exist' });
     }
     //hashing password
     const salt = genSaltSync(10);
     const hashPassword = hashSync(password, salt);
+    const hashPin = hashSync(pin, salt);
     const newUser = new User({
       name,
       email,
       phone,
       password: hashPassword,
-    
+      pin:hashPin
 
     });
     //save new user
@@ -73,7 +74,7 @@ export const signIn:RequestHandler = async(req, res, next) => {
 
       // Checking if the email exists in database 
       if(!user){
-          return res.status(400).json({ok:false,message:"Invalid Credentials"}) ;
+          return res.status(400).json({ok:false,message:"User not found"}) ;
       }
 
       // comapring password entered with database hashed Password
@@ -88,10 +89,14 @@ export const signIn:RequestHandler = async(req, res, next) => {
 
       // Saving tokens in cookies 
       // res.cookie('authToken',authToken,({httpOnly : true})) ;
-      // res.cookie('refreshToken',refreshToken,({httpOnly:true})) ;
+      
+      res.cookie('authToken',authToken,({httpOnly:true}));
+      res.cookie('refreshToken',refreshToken,({httpOnly:true}));
+
+
       res.header('Authorization', `Bearer ${authToken}`);
 
-      return res.status(200).json({ok:true,message : "Login Successful",userid:user.id, user, authToken:authToken}) ;
+      return res.status(200).json({ok:true,message : "Login Successful",userid:user.id, user, authToken:authToken, refreshToken:refreshToken}) ;
 
   }
   catch(err){
@@ -138,6 +143,7 @@ export const sendMoney:RequestHandler = async(req, res, next) => {
   // const receiverId = req.body.receiverId;
   const receiverMail = req.body.receiverMail;
   const amount = req.body.amount;
+  const pin = req.body.pin;
 
   // find sender and reciever in database
   const sender = await User.findOne({_id: senderId});
@@ -155,6 +161,10 @@ export const sendMoney:RequestHandler = async(req, res, next) => {
     return res.status(400).json({ message: "Cannot transfer to the same account" });
 
   }
+  const isPinMatch = await compareSync(pin,sender.pin) ;
+      if(!isPinMatch){
+          return res.status(400).json({ok:false,message:"Wrong Pin Number"}); 
+      }
   
   let senderBalance = sender.wallet;
 //if sender's balance is less than the sending amount
@@ -166,14 +176,18 @@ export const sendMoney:RequestHandler = async(req, res, next) => {
   // sender's transaction data 
   const sendertransactiondata = {
     id: generateUniqueId(),
+    status:"Sent money",
     amount: amount,
-    timestamp: new Date()
+    wallet: sender.wallet,
+    timestamp: new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})
 };
 // receiver's transaction data
 const receivertransactiondata = {
     id: generateUniqueId(),
+    status:"Received money",
     amount: amount,
-    timestamp: new Date()
+    wallet: receiver.wallet,
+    timestamp: new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})
 };
 // push sender's transaction data and reciever's data to their recpective transition array
 sender.transition.push(sendertransactiondata);
@@ -192,11 +206,14 @@ sender.transition.push(sendertransactiondata);
   await sender.save();
   await receiver.save();
 
-  let email = receiver.email;
-  // for sending mail to reciever that they have recieved the money
-sendMail(email,"Money transferred", `${receiver.name} trasnfered Rs. ${amount} in your wallet`);
+  let Senderemail = sender.email;
+  let Receiveremail = receiver.email;
 
-res.status(200).json({ok:true,message:"money sent successfully"}) ;
+  // for sending mail to sender and reciever that they have recieved the money
+sendMail(Senderemail,"Money transferred", `You transfered Rs. ${amount} in ${receiver.name}'s wallet`);
+sendMail(Receiveremail,"Money Received", `${sender.name} trasnfered Rs. ${amount} in your wallet`);
+
+res.status(200).json({ok:true,message:"money sent successfully", transitionId:sendertransactiondata.id}) ;
 
   }catch(error){
     res.status(407).json({ message: error });
@@ -207,19 +224,34 @@ export const addMoney:RequestHandler =async(req, res) => {
  try{
   const senderId = req.params.id;
   const amount = req.body.amount;
+  const pin = req.body.pin;
 
   const user = await User.findById(senderId);
   if(!user){
     return res.status(400).json({ok:false,message:"user not found"}) ;
   }
+  const isPinMatch = await compareSync(pin,user.pin) ;
+      if(!isPinMatch){
+          return res.status(400).json({ok:false,message:"Wrong Pin Number"}); 
+      }
+
   user.wallet = Number(user.wallet) + Number(amount);
+  const transactiondata = {
+    id: generateUniqueId(),
+    status:"Added money",
+    amount: amount,
+    wallet: user.wallet,
+    timestamp: new Date().toLocaleString("en-US", {timeZone: "Asia/Kolkata"})
+};
+user.transition.push(transactiondata);
+
  const result =  await User.findByIdAndUpdate(
     user._id,
     { wallet: user.wallet },
     { new: true }
   );
   await user.save();
-  res.status(200).json({ok:true,message:"money added successfully"});
+  res.status(200).json({ok:true,message:"money added successfully", transitionId:transactiondata.id});
   sendMail(user.email,"Money added", `${user.name} Rs. ${amount} in added in your wallet`);
  }catch(error){
   res.status(407).json({ message: error });
