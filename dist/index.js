@@ -21,9 +21,14 @@ const db = require("./config/db");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 //middleware
-app.use((0, cors_1.default)());
+var corsOptions = {
+    origin: "http://localhost:3000",
+    credentials: true
+};
+app.use((0, cors_1.default)(corsOptions));
+// app.use(cors());
 app.use(body_parser_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use('/', routes_1.default);
@@ -31,11 +36,12 @@ app.use('/', routes_1.default);
 app.use((err, req, res, next) => {
     res.status(500).json({ message: err.message });
 });
-//database connection
+//database connection function
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // connectDB
         yield db.connectDB(process.env.MONGO_URL);
+        //server connection port 
         app.listen(PORT, () => console.log(`Server is connected to port : ${PORT}`));
     }
     catch (error) {

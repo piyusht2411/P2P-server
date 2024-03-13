@@ -2,8 +2,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const allController_1 = require("../controller/allController");
+const authenticateToken_1 = require("../middleware/authenticateToken");
+const filter_1 = require("../controller/filter");
+//routers
 const router = (0, express_1.Router)();
 router.post('/register', allController_1.register);
-router.post('/signIn', allController_1.signIn);
-router.get('/showBalance', allController_1.showBalance);
+router.get('/logout', allController_1.signout);
+router.put('/addmoney/:id', authenticateToken_1.authenticateToken, allController_1.addMoney);
+router.post('/login', allController_1.signIn);
+router.put('/sendmoney/:id', authenticateToken_1.authenticateToken, allController_1.sendMoney);
+router.get('/userinfo/:id', authenticateToken_1.authenticateToken, allController_1.userInfo);
+router.get('/hour/:id', authenticateToken_1.authenticateToken, filter_1.hour);
+router.get('/day/:id', authenticateToken_1.authenticateToken, filter_1.day);
+router.get('/week/:id', authenticateToken_1.authenticateToken, filter_1.week);
+router.get('/month/:id', authenticateToken_1.authenticateToken, filter_1.month);
+router.get('/year/:id', authenticateToken_1.authenticateToken, filter_1.year);
 exports.default = router;
