@@ -11,9 +11,6 @@ export const authenticateToken = async(req: Request, res: Response, next: NextFu
     // const mmy = req.params.id; => may check this this may be correct
 
     const authToken =  req.header('authorization');
-        if(!refreshToken){
-        return res.status(405).json({message : "hey "})
-    }
     // if (!authToken) {
     //     return res.status(401).send('Access token not found');
     // }
@@ -29,7 +26,7 @@ export const authenticateToken = async(req: Request, res: Response, next: NextFu
     // const refreshToken = tokenuser.refreshToken;
     //if auth token and refersh token both doesn't exist
     if(!authToken || !refreshToken){
-        return res.status(401).json({message : " Authentication Failed : No authToken or refreshToken is provided "})
+        return res.status(405).json({message : " Authentication Failed : No authToken or refreshToken is provided "})
     }
     //verify auth token
     // console.log("backend authToken", authToken);
