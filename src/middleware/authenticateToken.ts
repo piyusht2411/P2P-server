@@ -11,7 +11,7 @@ export const authenticateToken = async(req: Request, res: Response, next: NextFu
     // const mmy = req.params.id; => may check this this may be correct
 
     const authToken =  req.header('authorization');
-        if(!authToken){
+        if(!refreshToken){
         return res.status(405).json({message : "hey "})
     }
     // if (!authToken) {
