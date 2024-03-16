@@ -37,7 +37,7 @@ const authenticateToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     // const refreshToken = tokenuser.refreshToken;
     //if auth token and refersh token both doesn't exist
     if (!authToken || !refreshToken) {
-        return res.status(401).json({ message: " Authentication Failed : No authToken or refreshToken is provided " });
+        return res.status(405).json({ message: " Authentication Failed : No authToken or refreshToken is provided " });
     }
     //verify auth token
     // console.log("backend authToken", authToken);
