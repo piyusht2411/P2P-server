@@ -24,9 +24,9 @@ const authenticateToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     // const refreshToken =auth && auth.split('+')[1];
     // const mmy = req.params.id; => may check this this may be correct
     const authToken = req.header('authorization');
-    // if (!authToken) {
-    //     return res.status(401).send('Access token not found');
-    // }
+    if (!authToken) {
+        return res.status(405).send('Access token not found');
+    }
     // const decoded = jwt.verify(authToken.replace('Bearer ', ''), process.env.JWT_SECRET_KEY || " ");
     // const userdata :any = decoded;
     // const myuserId = userdata.userId;
@@ -36,8 +36,9 @@ const authenticateToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     // }
     // const refreshToken = tokenuser.refreshToken;
     //if auth token and refersh token both doesn't exist
+    
     if (!authToken || !refreshToken) {
-        return res.status(405).json({ message: " Authentication Failed : No authToken or refreshToken is provided " });
+        return res.status(401).json({ message: " Authentication Failed : No authToken or refreshToken is provided " });
     }
     //verify auth token
     // console.log("backend authToken", authToken);
