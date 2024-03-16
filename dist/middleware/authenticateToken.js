@@ -24,7 +24,7 @@ const authenticateToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     // const refreshToken =auth && auth.split('+')[1];
     // const mmy = req.params.id; => may check this this may be correct
     const authToken = req.header('authorization');
-    if (!authToken) {
+    if (!refreshToken) {
         return res.status(405).send('Access token not found');
     }
     // const decoded = jwt.verify(authToken.replace('Bearer ', ''), process.env.JWT_SECRET_KEY || " ");
