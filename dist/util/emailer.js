@@ -20,7 +20,7 @@ const sendMail = (email, mailSubject, body) => {
         from: {
             name:'P2P Wallet',
             address:process.env.NODE_EMAIL
-        }
+        },
         to: email,
         subject: mailSubject,
         text: body
