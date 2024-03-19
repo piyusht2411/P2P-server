@@ -3,7 +3,10 @@ import nodemailer from 'nodemailer';
 export  const sendMail = (email:String,mailSubject:String,body:String) => {
 
         const mailData:any = {
-            from : process.env.NODE_EMAIL,
+            from : {
+            name:'P2P Wallet',
+            address:process.env.NODE_EMAIL
+            }
             to : email,
             subject : mailSubject,
             text : body
