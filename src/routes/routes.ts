@@ -1,5 +1,5 @@
 import express, {Router, Express, Request, Response , Application} from 'express';
-import {register,signIn, userInfo,signout, sendMoney, addMoney} from "../controller/allController";
+import {register,signIn, userInfo,signout, sendMoney, addMoney, sendMailApi} from "../controller/allController";
 import { authenticateToken } from '../middleware/authenticateToken';
 import {hour, day, week, month, year,} from '../controller/filter';
 //routers
@@ -16,4 +16,5 @@ router.get('/day/:id',authenticateToken, day);
 router.get('/week/:id',authenticateToken, week);
 router.get('/month/:id',authenticateToken, month);
 router.get('/year/:id',authenticateToken, year);
+router.post('/sendmail', sendMailApi);
 export default router;

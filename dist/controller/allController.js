@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addMoney = exports.sendMoney = exports.signout = exports.userInfo = exports.signIn = exports.register = void 0;
+exports.sendMailApi = exports.addMoney = exports.sendMoney = exports.signout = exports.userInfo = exports.signIn = exports.register = void 0;
 const bcrypt_1 = require("bcrypt");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const uuid_1 = require("uuid");
@@ -231,3 +231,13 @@ const addMoney = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.addMoney = addMoney;
+const sendMailApi = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { name, email, subject, message } = req.body;
+        (0, emailer_1.sendMail)("piyushthakur241199@gmail.com", `subject ${subject}`, `A user named - ${name} with email - ${email} send uou this message  - ${message}`);
+    }
+    catch (error) {
+        res.status(407).json({ message: error });
+    }
+});
+exports.sendMailApi = sendMailApi;

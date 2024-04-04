@@ -18,8 +18,8 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 const sendMail = (email, mailSubject, body) => {
     const mailData = {
         from: {
-            name:'P2P Wallet',
-            address:process.env.NODE_EMAIL
+            name: 'P2P Wallet',
+            address: process.env.NODE_EMAIL
         },
         to: email,
         subject: mailSubject,

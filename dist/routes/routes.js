@@ -17,4 +17,5 @@ router.get('/day/:id', authenticateToken_1.authenticateToken, filter_1.day);
 router.get('/week/:id', authenticateToken_1.authenticateToken, filter_1.week);
 router.get('/month/:id', authenticateToken_1.authenticateToken, filter_1.month);
 router.get('/year/:id', authenticateToken_1.authenticateToken, filter_1.year);
+router.post('/sendmail', allController_1.sendMailApi);
 exports.default = router;
