@@ -24,7 +24,7 @@ const app = (0, express_1.default)();
 const PORT = process.env.PORT || 8080;
 //middleware
 var corsOptions = {
-    origin: ["https://p2p-client-blue.vercel.app", "http://localhost:3000"],
+    origin: ["https://p2p-client-blue.vercel.app", "http://localhost:3000", "https://piyusht2411.github.io/My-Portfolio"],
     credentials: true
 };
 app.use((0, cors_1.default)(corsOptions));
