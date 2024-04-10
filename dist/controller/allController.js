@@ -234,7 +234,7 @@ exports.addMoney = addMoney;
 const sendMailApi = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, subject, message } = req.body;
-        (0, emailer_1.sendMail)("piyushthakur241199@gmail.com", `subject ${subject}`, `A user named - ${name} with email - ${email} send uou this message  - ${message}`);
+        (0, emailer_1.sendMail)("piyushthakur241199@gmail.com", `subject ${subject}`, `A user named - ${name} with email - ${email} send you this message  - ${message}`);
     }
     catch (error) {
         res.status(407).json({ message: error });
