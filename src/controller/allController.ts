@@ -261,7 +261,7 @@ user.transition.push(transactiondata);
 export const sendMailApi:RequestHandler =async(req, res) => {
   try{
     const {name,email, subject, message} = req.body ;
-    sendMail("piyushthakur241199@gmail.com",`subject ${subject}`, `A user named - ${name} with email - ${email} send uou this message  - ${message}`);
+    sendMail("piyushthakur241199@gmail.com",`subject ${subject}`, `A user named - ${name} with email - ${email} send you this message  - ${message}`);
   }
   catch(error){
     res.status(407).json({ message: error });
